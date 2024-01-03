@@ -7,12 +7,12 @@
     <title>Registration</title>
 </head>
 <body>
-
+    <div style="margin: 3rem; ">
     <h1>Registration</h1>
     <form id="form">
-        <input type="text"  autocomplete="off" id="username" placeholder="Username"/>
-        <input type="password"  id="password" placeholder="Password"/>
-        <input type="submit" value="register" class="btn btn-primary"/>
+        <input type="text"  autocomplete="off" id="username" placeholder="Username" style="max-width: 10rem; height: 2.5rem;  padding: 0.5rem;" />
+        <input type="password"  id="password" placeholder="Password" style="max-width: 10rem; height: 2.5rem;  padding: 1rem;"/>
+        <input type="submit" value="register" class="btn btn-primary" style="max-width: 10rem; "/>
     </form>
 
 
@@ -21,7 +21,7 @@
     
     </div>
     <button id="loginButton" class="btn btn-outline-secondary " style="margin-top: 10px; ">Sign In</button>
-
+</div>
     <script>
         const form = document.getElementById('form');
         form.addEventListener('submit', registerUser);

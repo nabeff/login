@@ -37,7 +37,11 @@
             })
            }).then((res) => res.json())
 
-           console.log(result)
+           if(result.status === 'ok'){
+            alert("successful")
+           }else{
+            alert(result.error)
+           }
         }
     </script>
 </body>

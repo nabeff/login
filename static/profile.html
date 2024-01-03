@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <div id="profile"></div>
+
+    <script>
+        // Get the user's token from local storage
+        const token = localStorage.getItem('token');
+
+  // Fetch user data using the token
+  fetch('/api/profile', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+  .then((res) => res.json())
+  .then((data) => {
+    const profileElement = document.getElementById('profile');
+
+    if (data.status === 'ok') {
+      const username = data.user.username;
+
+      // Display the user's name in the profile section
+      profileElement.innerHTML = `<p>Welcome, ${username}!</p>`;
+    } else {
+      // Display an error message if there's an issue fetching the user data
+      profileElement.innerHTML = `<p>Error: ${data.error}</p>`;
+    }
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    // Display an error message if there's an issue with the fetch request
+    document.getElementById('profile').innerHTML = '<p>An error occurred while fetching user data.</p>';
+  });
+    </script>
+</body>
+</html>

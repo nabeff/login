@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const User = require("./model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 const JWT_SECRET = "jkbkhbqonoijjo@ù^$ùgiojsouihqohcq";
 
 mongoose.connect("mongodb://localhost:27017/login-app-db");
@@ -31,7 +32,7 @@ app.post("/api/login", async (req, res) => {
       },
       JWT_SECRET
     );
-
+    res.header("Authorization", `Bearer ${token}`);
     return res.json({ status: "ok", data: token });
   }
 
@@ -63,15 +64,46 @@ app.post("/api/register", async (req, res) => {
       username,
       password,
     });
+
     console.log("User created successfully: ", response);
+
+    const token = jwt.sign(
+      {
+        id: response._id,
+        username: response.username,
+      },
+      JWT_SECRET
+    );
+
+    res.json({ status: "ok", data: { token, username } }); // Send token and username
   } catch (error) {
     if (error.code === 11000) {
       return res.json({ status: "error", error: "Username already in use" });
     }
     throw error;
   }
+});
 
-  res.json({ status: "ok" });
+app.get("/api/profile", async (req, res) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res.json({ status: "error", error: "Token not provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token.split(" ")[1], JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.json({ status: "error", error: "User not found" });
+    }
+
+    // Return the user's data
+    res.json({ status: "ok", user: { username: user.username } });
+  } catch (error) {
+    return res.json({ status: "error", error: "Invalid token" });
+  }
 });
 
 app.listen(9999, () => {

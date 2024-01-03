@@ -16,6 +16,8 @@
     </form>
 
     <script>
+
+        
         const form = document.getElementById('login')
         form.addEventListener('submit', login)
 
@@ -38,7 +40,9 @@
            }).then((res) => res.json())
 
            if(result.status === 'ok'){
-            console.log('Got the token', result.data)
+            console.log('Got the token', result.data) 
+            localStorage.setItem('token', result.data); 
+            window.location.href = '/profile.html';         
             alert("successful")
            }else{
             alert(result.error)

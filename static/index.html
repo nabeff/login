@@ -17,32 +17,35 @@
 
     <script>
         const form = document.getElementById('form')
-        form.addEventListener('submit', registerUser)
+form.addEventListener('submit', registerUser)
 
+async function registerUser(event){
+    event.preventDefault()
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
 
-        // here we gonna send the data as JSON because we are using JS or urlencoded but it is better for php
-        async function registerUser(event){
-            event.preventDefault()
-            const username = document.getElementById('username').value
-            const password = document.getElementById('password') .value
+    const result = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username,
+            password
+        })
+    }).then((res) => res.json())
 
-            const result = await fetch('/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username,
-                password
-            })
-           }).then((res) => res.json())
+    if(result.status === 'ok'){
+        // Store the new token and username in localStorage
+        localStorage.setItem('token', result.data.token);
+        localStorage.setItem('username', result.data.username);
+        alert("successful");
+        window.location.href = '/profile.html';
+    } else {
+        alert(result.error);
+    }
+}
 
-           if(result.status === 'ok'){
-            alert("successful")
-           }else{
-            alert(result.error)
-           }
-        }
     </script>
 </body>
 </html>
